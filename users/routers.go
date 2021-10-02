@@ -1,9 +1,7 @@
 package users
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func UsersRegister(router *gin.RouterGroup) {
