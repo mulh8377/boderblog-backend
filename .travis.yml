@@ -1,0 +1,6 @@
+language: go
+
+go_import_path: github.com/mulh8377/boderblog-backend
+
+install:
+  - go get -u github.com/mulh8377/boderblog-backend
