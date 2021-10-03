@@ -1,6 +1,9 @@
 package users
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/mulh8377/boderblog-backend/common"
+)
 
 type UserModelValidator struct {
 	User struct {
@@ -23,13 +26,31 @@ type LoginValidator struct {
 }
 
 func (self *UserModelValidator) Bind(c *gin.Context) error {
+	err := common.Bind(c, self)
+	if err != nil {
+		return err
+	}
+	self.userModel.UserName = self.User.Username
+	self.userModel.Email = self.User.Email
+	self.userModel.Bio = self.User.Bio
+
+	if self.User.Password != common.NBRandomPassword {
+		self.userModel.setPassword(self.User.Password)
+	}
+	if self.User.Image != "" {
+		self.userModel.Image = &self.User.Image
+	}
 
 	return nil
 
 }
 
 func (self *LoginValidator) Bind(c *gin.Context) error {
-
+	err := common.Bind(c, self)
+	if err != nil {
+		return err
+	}
+	self.userModel.Email = self.User.Email
 	return nil
 
 }
@@ -47,7 +68,15 @@ func emptyLoginInvalidator() LoginValidator {
 func initUserModelInvalidator(userModel UserModel) UserModelValidator {
 	user := emptyUserModelInvalidator()
 
+	user.User.Username = userModel.UserName
+	user.User.Email = userModel.Email
+	user.User.Bio = userModel.Bio
+	user.User.Password = common.NBRandomPassword
 	// fill out the rest
+
+	if userModel.Image != nil {
+		user.User.Image = *userModel.Image
+	}
 
 	return user
 }

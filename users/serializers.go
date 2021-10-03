@@ -1,6 +1,7 @@
 package users
 
 import "github.com/gin-gonic/gin"
+import "github.com/mulh8377/boderblog-backend/common"
 
 type UserSerializer struct {
 	c *gin.Context
@@ -21,7 +22,7 @@ func (self * UserSerializer) Response() UserResponse {
 		Email: myModel.Email,
 		Bio: myModel.Bio,
 		Image: myModel.Image,
-		Token: "test",
+		Token: common.GenToken(myModel.ID),
 	}
 	return user
 }
